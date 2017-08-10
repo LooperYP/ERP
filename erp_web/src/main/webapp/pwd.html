@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>员工管理</title>
+<link rel="stylesheet" type="text/css" href="ui/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="ui/themes/icon.css">
+<script type="text/javascript" src="ui/jquery.min.js"></script>
+<script type="text/javascript" src="ui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="ui/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="ui/jquery.serializejson.min.js"></script>
+<script type="text/javascript" src="ui/date.js"></script>
+<script type="text/javascript" src="js/pwd.js"></script>
+</head>
+<body>
+<table id="grid"></table>
+
+<div id="editDlg" style="padding:8px;">
+	<form id="editForm">
+			<input name="id" type="hidden" id="uuid"> 
+
+		<table>
+			<tr>
+				<td>新密码</td><td><input name="newPwd"> </td>
+			</tr>
+		</table>
+	</form>
+</div>
+
+</body>
+</html>

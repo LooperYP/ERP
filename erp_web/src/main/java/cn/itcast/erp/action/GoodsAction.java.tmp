@@ -1,0 +1,82 @@
+package cn.itcast.erp.action;
+import java.io.File;
+import java.io.FileInputStream;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts2.ServletActionContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import cn.itcast.erp.biz.IGoodsBiz;
+import cn.itcast.erp.entity.Goods;
+
+/**
+ * 商品Action 
+ * @author Administrator
+ *
+ */
+public class GoodsAction extends BaseAction<Goods> {
+	private static final Logger log = LoggerFactory.getLogger(GoodsAction.class);
+	private IGoodsBiz goodsBiz;
+	
+	private File file;
+	private String fileFileName;
+	private String fileContentType;
+	
+	/**
+	 * 导出数据
+	 */
+	public void export(){
+		//导出的文件名
+		String filename = "商品表.xls";
+
+		try {
+			//进行ISO-8859-1，传输中对中文的转码
+			filename = new String(filename.getBytes(), "ISO-8859-1");
+			HttpServletResponse res = ServletActionContext.getResponse();
+			//告诉客户端，传输是一个文件
+			res.setHeader("Content-Disposition", "attachment;filename=" + filename);
+			goodsBiz.export(res.getOutputStream(), getT1());
+		} catch (Exception e) {
+			log.error("导出数据失败",e);
+		}
+	}
+	
+	/**
+	 * 导入数据
+	 */
+	public void doImport(){
+		System.out.println("==================="+fileFileName);
+		System.out.println("==================="+fileContentType);
+		
+		try {
+			if(!"application/vnd.ms-excel".equals(fileContentType)){
+				if(!(fileFileName.endsWith(".xls")||fileFileName.endsWith(".xlsx"))){
+					ajaxReturn(false,"不是excel文件-xls类型");
+					return;
+				}
+			}
+			goodsBiz.doImport(new FileInputStream(file));
+			ajaxReturn(true,"导入成功");
+		} catch (Exception e) {
+			log.error("导入失败",e);
+		}
+	}
+	
+	
+	public void setGoodsBiz(IGoodsBiz goodsBiz) {
+		this.goodsBiz = goodsBiz;
+		super.setBaseBiz(this.goodsBiz);
+	}
+	public void setFile(File file) {
+		this.file = file;
+	}
+	public void setFileFileName(String fileFileName) {
+		this.fileFileName = fileFileName;
+	}
+	public void setFileContentType(String fileContentType) {
+		this.fileContentType = fileContentType;
+	}
+
+}

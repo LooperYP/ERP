@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<table>
+		<thead>
+			<th>商品编号</th>
+			<th>商品名称</th>
+			<th>库存数量</th>
+			<th>待发货数量</th>
+		</thead>
+		<tbody>
+		<#list storealertList as storealert>
+		<tr>
+			<td>${storealert.uuid}</td>
+			<td>${storealert.name}</td>
+			<td>${storealert.storenum}</td>
+			<td>${storealert.outnum}</td>
+		</tr>
+		</#list>
+		</tbody>
+		
+	</table>
+</body>
+</html>

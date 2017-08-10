@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>盘盈盘亏管理</title>
+<link rel="stylesheet" type="text/css" href="ui/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="ui/themes/icon.css">
+<link rel="stylesheet" type="text/css" href="css/table.css">
+<script type="text/javascript" src="ui/jquery.min.js"></script>
+<script type="text/javascript" src="ui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="ui/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="ui/jquery.serializejson.min.js"></script>
+<script type="text/javascript" src="ui/request.js"></script>
+<script type="text/javascript" src="js/inventory.js"></script>
+<script type="text/javascript" src="ui/date.js"></script>
+</head>
+<body>
+<div class="easyui-panel" style="padding-left:4px;border-bottom:0px;">
+	<div style="height:2px;"></div>
+	<form id="searchForm">
+		登记日期：<input name="t1.createtime" class="easyui-datebox"> -> <input name="t2.createtime" class="easyui-datebox">
+		审核日期：<input name="t1.checktime" class="easyui-datebox"> -> <input name="t2.checktime" class="easyui-datebox">
+		类型：全部<input name="t1.type" type="radio" value="">
+		盘盈<input name="t1.type" type="radio" value="0">
+		盘亏<input name="t1.type" type="radio" value="1">
+		<button type="button" id="btnSearch">查询</button>
+	</form>
+	<div style="height:2px;"></div>
+</div>
+
+<table id="grid"></table>
+
+<!-- <div id="editDlg" style="padding:8px;" data-options="title:'编辑窗口',width:500,height:300,closed:true,modal:true
+" style="padding:4px;"> -->
+<!-- 编辑窗口 -->
+<div id="editDlg" class="easyui-dialog" style="padding:4px;">
+	<form id="editForm">
+			<input name="t.uuid" type="hidden"> 
+		<table class="hovertable">
+			<tr>
+				<td class="bg">编号</td><td id="uuid"></td>
+			</tr>
+			<tr>
+				<td class="bg">登记日期</td class="noBorderBottom"><td id="createtime"></td>
+			</tr>
+			<tr>
+				<td class="bg">商品</td><td id="goodsName"></td>
+			</tr>
+			<tr>
+				<td class="bg">仓库</td><td id="storeName"></td>
+			</tr>
+			<tr>
+				<td class="bg">数量</td><td id="num"></td>
+			</tr>
+			<tr>
+				<td class="bg">类型</td><td id="type"></td>
+			</tr>
+			<tr>
+				<td class="bg">备注</td><td  id="remark"> </td>
+			</tr>
+
+		</table>
+	</form>
+</div>
+<div id="addInvertoryDlg" class="easyui-dialog" style="padding:4px;">
+	<form id="addInvertoryForm">
+		<table>
+			<tr>
+				<td>商品：</td>
+				<td><input name="t.goodsuuid" class="easyui-combobox" data-options="
+					url:'goods_list',
+					valueField:'uuid',
+					textField:'name',
+					required:true,
+					missingMessage:'请选择商品'
+					" >
+				</td>
+			</tr>
+			<tr>
+				<td>仓库：</td>
+				<td><input name="t.storeuuid" class="easyui-combobox" data-options="
+					url:'store_list',
+					valueField:'uuid',
+					textField:'name',
+					required:true,
+					missingMessage:'请选择仓库'
+					" >
+				</td>
+			</tr>
+			<tr>
+				<td>数量：</td><td><input class="easyui-numberbox" name="t.num" data-options="required:true,missingMessage:'请输入数量'"> </td>
+			</tr>
+			<!-- <tr>
+				<td>类型</td>
+				<td>
+				<input type="radio" name="t.type" value="0">盘盈 
+				<input type="radio" name="t.type" value="1">盘亏
+				</td>
+			</tr> -->
+			<tr>
+				<td>备注：</td><td><input name="t.remark"> </td>
+			</tr>
+		</table>
+	</form>
+</div>
+
+
+
+</body>
+</html>

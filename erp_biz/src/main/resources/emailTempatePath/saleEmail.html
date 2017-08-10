@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<table>
+Dear:${supplierName},<br/>
+以下商品最新报价，请查收！！
+		<thead>
+			<th>商品名称</th>
+			<th>价格（￥）</th>
+			<th>单位</th>
+		</thead>
+		<tbody>
+		<#list goodsList as goods>
+		<tr>
+			<td>${goods.name}</td>
+			<td>${goods.outprice}</td>
+			<td>${goods.unit}</td>
+		</tr>
+		</#list>
+		</tbody>
+
+	</table>
+</body>
+</html>

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+						http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- 跟web.xml中配置的那个filter名称一致 -->
+	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+		<!-- 安全管理器：shiro的核心，外观者模式，facade模式 -->
+		<property name="securityManager" ref="securityManager"/>
+		<!-- 认证不通过的时候，跳转到登陆页面 -->
+		<property name="loginUrl" value="/login.html"/>
+
+		<property name="filters">
+			<map>
+				<entry key="perms" value-ref="erpFilter"/>
+			</map>
+		</property>
+
+		<!-- 未授权时，跳转的页面 -->
+		<property name="unauthorizedUrl" value="/error.html"/>
+		<!-- 过滤链: 配置需要进入权限验证的页面或资源 -->
+		<property name="filterChainDefinitions">
+			<value>
+				/error.html = anon
+				/login_*=anon
+									
+				/emp_updatePwd= perms[]
+				/*_get=perms[]
+				/*_list=perms[]
+				/*_listByPage=perms[]
+				/pwd.html=perms["重置密码"]	
+				/emp_updatePwd_reset=perms["重置密码"]
+														
+				/orders.html= perms["采购申请","采购订单查询","采购审核","采购确认","采购入库","销售订单录入","销售订单查询","销售订单出库"]	
+				/orders_add= perms["采购申请","销售订单录入"]					
+				/orders_doCheck=perms["采购审核"]
+				/orders_doStart=perms["采购确认"]	
+				/store_mylist= perms["采购入库","销售订单出库","销售退货入库,"采购退货出库"]
+				/orderdetail_doInStore=perms["采购入库"]
+				/orderdetail_doOutStore=perms["销售订单出库"]
+				
+				/returnorders.html= perms["采购退货登记","采购退货审核","采购退货出库","采购退货查询","销售退货登记","销售退货审核","销售退货入库","销售退货查询"]	
+				/returnorders_add= perms["采购退货登记","销售退货登记"]					
+				/returnorders_doCheck=perms["采购退货审核","销售退货审核"]
+				/returnorderdetail_doInStore=perms["销售退货入库"]
+				/returnorderdetail_doOutStore=perms["采购退货出库"]
+				
+				/storedetail.html= perms["库存查询"]				
+				/storeoper.html= perms["库存变动记录"]
+				/storealert.html= perms["库存预警"]
+				/inventory.html= perms["盘盈盘亏登记","盘盈盘亏审核","盘盈盘亏查询"]
+				/inventory_add= perms["盘盈盘亏登记","盘盈盘亏查询"]
+				/inventory_doCheck= perms["盘盈盘亏审核","盘盈盘亏查询"]
+				/inventory_query= perms["盘盈盘亏查询"]
+		
+				/report_orders.html= perms["销售统计表"]
+				/report_order*= perms["销售统计表"]
+
+				/report_trend.html= perms["销售趋势分析"]
+				/report_trend*= perms["销售趋势分析"]
+				
+				/report_returnOrders.html= perms["销售退货统计表"]
+				/report_returnTrend*= perms["销售退货统计表"]
+				
+				/report_returnTrend.html= perms["销售退货趋势分析"]
+				/report_returnTrend*= perms["销售退货趋势分析"]
+				
+				/report_inoutmoney.html= perms["收入支出统计分析"]
+				/report_getInOutMoney*= perms["收入支出统计分析"]
+								
+				/roleMenuSet.html=perms["角色权限设置"]
+				/role_readRoleMenus=perms["角色权限设置"]
+				/role_updateRoleMenus=perms["角色权限设置"]
+								
+				/empRoleSet.html=perms["用户角色设置"]
+				/emp_readEmpRoles=perms["用户角色设置"]
+				/emp_updateEmpRoles=perms["用户角色设置"]
+
+				/role.html= perms["角色设置"]
+				/role_*= perms["角色设置"]			
+
+				/goodstype.html= perms["商品类型"]						
+				/goodstype_*= perms["商品类型"]	
+									
+				/goods.html= perms["商品"]						
+				/goods_*= perms["商品"]
+
+				/supplier.html = perms["供应商","客户"]						
+				/supplier_* = perms["供应商","客户"]
+				
+				/store.html= perms["仓库"]
+				/store_*= perms["仓库"]
+
+				/emp.html= perms["员工"]								
+				/emp_*= perms["员工"]
+				
+				/dep.html= perms["部门"]		
+				/dep_*= perms["部门"]		
+
+				/*.html = authc					
+				/* = authc					
+			</value>
+		</property>
+	</bean>
+
+	<!-- 安全管理器：大脑 -->
+	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+		<property name="realm" ref="erpRealm"></property>
+		<property name="cacheManager" ref="shiroCacheManager"></property>
+	</bean>
+
+	<bean id="erpRealm" class="cn.itcast.erp.realm.ErpRealm">
+		<property name="empBiz" ref="empBiz"></property>
+		<property name="menuBiz" ref="menuBiz"></property>
+	</bean>
+	
+	<bean id="erpFilter" class="cn.itcast.erp.filter.ErpAuthorizationFilter"></bean>
+	
+	<!-- 认证与授权的缓存 -->
+	<bean id="shiroCacheManager" class="org.apache.shiro.cache.MemoryConstrainedCacheManager"></bean>
+	
+	<!-- 启动shiro注解 -->
+	<bean
+		class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
+			depends-on="lifecycleBeanPostProcessor" >
+		<!-- 默认使用JDK代理 ，如被代理类没有实现接口，必须使用下列配置开启 cglib代理  -->
+		<property name="proxyTargetClass" value="true" />
+	</bean>	
+	<bean
+		class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+		<property name="securityManager" ref="securityManager" />
+	</bean>
+	
+	<!-- 对安全管理器 增强代码 ， spring 后处理器 -->
+	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/> 
+</beans>

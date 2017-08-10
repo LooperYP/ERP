@@ -1,0 +1,148 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/tx 
+		http://www.springframework.org/schema/tx/spring-tx.xsd
+		http://www.springframework.org/schema/aop 
+		http://www.springframework.org/schema/aop/spring-aop.xsd
+		">   
+	<!-- 部门 -->
+	<bean id="depBiz" class="cn.itcast.erp.biz.impl.DepBiz">
+		<property name="depDao" ref="depDao"></property>
+		<property name="empDao" ref="empDao"></property>
+	</bean>
+	<!-- 员工 -->
+	<bean id="empBiz" class="cn.itcast.erp.biz.impl.EmpBiz">
+		<property name="empDao" ref="empDao"></property>
+		<property name="depDao" ref="depDao"></property>
+		<property name="cacheManager" ref="cacheManager"></property>
+		<property name="roleDao" ref="roleDao"></property>
+		<property name="jedis" ref="jedis"></property>
+		<property name="shiroCacheManager" ref="shiroCacheManager"></property>
+	</bean>
+	<!-- 商品 -->
+	<bean id="goodsBiz" class="cn.itcast.erp.biz.impl.GoodsBiz">
+		<property name="goodsDao" ref="goodsDao"></property>
+		<property name="goodstypeDao" ref="goodstypeDao"></property>
+		<property name="ordersDao" ref="ordersDao"></property>
+	</bean>
+	<!-- 商品分类 -->
+	<bean id="goodstypeBiz" class="cn.itcast.erp.biz.impl.GoodstypeBiz">
+		<property name="goodstypeDao" ref="goodstypeDao"></property>
+	</bean>
+	<!-- 盘盈盘亏 -->
+	<bean id="inventoryBiz" class="cn.itcast.erp.biz.impl.InventoryBiz">
+		<property name="inventoryDao" ref="inventoryDao"></property>
+		<property name="empDao" ref="empDao"></property>
+		<property name="storeDao" ref="storeDao"></property>
+		<property name="goodsDao" ref="goodsDao"></property>
+		<property name="cacheManager" ref="cacheManager"></property>
+		<property name="storedetailDao" ref="storedetailDao"></property>
+		<property name="storeoperDao" ref="storeoperDao"></property>
+	</bean>
+	<!-- 菜单 -->
+	<bean id="menuBiz" class="cn.itcast.erp.biz.impl.MenuBiz">
+		<property name="menuDao" ref="menuDao"></property>
+		<property name="jedis" ref="jedis"></property>
+	</bean>
+	<!-- 订单明细 -->
+	<bean id="orderdetailBiz" class="cn.itcast.erp.biz.impl.OrderdetailBiz">
+		<property name="orderdetailDao" ref="orderdetailDao"></property>
+		<property name="storedetailDao" ref="storedetailDao"></property>
+		<property name="storeoperDao" ref="storeoperDao"></property>
+		<property name="waybillWs" ref="waybillClient"></property>
+		<property name="supplierDao" ref="supplierDao"></property>
+	</bean>
+	<!-- 订单 -->
+	<bean id="ordersBiz" class="cn.itcast.erp.biz.impl.OrdersBiz">
+		<property name="ordersDao" ref="ordersDao"></property>
+		<property name="supplierDao" ref="supplierDao"></property>
+		<property name="empDao" ref="empDao"></property>
+		<property name="cacheManager" ref="cacheManager"></property>
+	</bean>
+	<!-- 退货订单明细 -->
+	<bean id="returnorderdetailBiz" class="cn.itcast.erp.biz.impl.ReturnorderdetailBiz">
+		<property name="returnorderdetailDao" ref="returnorderdetailDao"></property>
+		<property name="storedetailDao" ref="storedetailDao"></property>
+		<property name="storeoperDao" ref="storeoperDao"></property>
+	</bean>
+	<!-- 退货订单 -->
+	<bean id="returnordersBiz" class="cn.itcast.erp.biz.impl.ReturnordersBiz">
+		<property name="returnordersDao" ref="returnordersDao"></property>
+		<property name="supplierDao" ref="supplierDao"></property>
+		<property name="empDao" ref="empDao"></property>
+		<property name="ordersDao" ref="ordersDao"></property>
+	</bean>
+	<!-- 角色 -->
+	<bean id="roleBiz" class="cn.itcast.erp.biz.impl.RoleBiz">
+		<property name="roleDao" ref="roleDao"></property>
+		<property name="menuDao" ref="menuDao"></property>
+		<property name="jedis" ref="jedis"></property>
+	</bean>
+	<!-- 仓库 -->
+	<bean id="storeBiz" class="cn.itcast.erp.biz.impl.StoreBiz">
+		<property name="storeDao" ref="storeDao"></property>
+	</bean>
+	<!-- 仓库库存 -->
+	<bean id="storedetailBiz" class="cn.itcast.erp.biz.impl.StoredetailBiz">
+		<property name="storedetailDao" ref="storedetailDao"></property>
+		<property name="goodsDao" ref="goodsDao"></property>
+		<property name="storeDao" ref="storeDao"></property>
+		<property name="mailUtil" ref="mailUtil"></property>
+		<property name="to" value="erik2010163@163.com"></property>
+		<property name="title" value="ERP库存预警[time]"></property>
+		<property name="text" value="当前有[cout]种商品发现库存预警了,请登陆蓝云ERP系统查看"></property>
+	</bean>
+	<!-- 仓库操作记录 -->
+	<bean id="storeoperBiz" class="cn.itcast.erp.biz.impl.StoreoperBiz">
+		<property name="storeoperDao" ref="storeoperDao"></property>
+		<property name="empDao" ref="empDao"></property>
+		<property name="goodsDao" ref="goodsDao"></property>
+		<property name="storeDao" ref="storeDao"></property>
+	</bean>
+	<!-- 供应商 -->
+	<bean id="supplierBiz" class="cn.itcast.erp.biz.impl.SupplierBiz">
+		<property name="supplierDao" ref="supplierDao"></property>
+		<property name="cacheManager" ref="cacheManager"></property>
+	</bean>
+
+	<!-- 报表 -->
+	<bean id="reportBiz" class="cn.itcast.erp.biz.impl.ReportBiz">
+		<property name="reportDao" ref="reportDao"></property>
+		<property name="goodstypeDao" ref="goodstypeDao"></property>
+	</bean>
+	<bean id="saleEmailBiz" class="cn.itcast.erp.biz.impl.SaleEmailBiz">
+		<property name="goodsDao" ref="goodsDao"></property>
+		<property name="supplierDao" ref="supplierDao"></property>
+		<property name="freeMarker" ref="freeMarker"></property>
+		<property name="mailUtil" ref="mailUtil"></property>
+		<property name="title" value="商品报价表：[time]"></property>
+	</bean>
+	
+	<!-- spring中自带的缓存 -->
+	<bean id="cacheManager" class="org.springframework.cache.support.SimpleCacheManager">
+		<property name="caches">
+			<set>
+				<bean class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean">
+					<property name="name" value="myCache"></property>
+				</bean>
+			</set>
+		</property>
+	</bean>
+	
+	<!-- 模板 -->
+	<bean id="freeMarker" class="org.springframework.ui.freemarker.FreeMarkerConfigurationFactoryBean">
+	    <property name="templateLoaderPaths" value="classpath:emailTempatePath"></property>
+	</bean>
+	
+	<bean id="jedis" class="redis.clients.jedis.Jedis">
+		<constructor-arg index="0" value="192.168.39.200"></constructor-arg>
+	</bean>
+</beans>
+	

@@ -1,0 +1,227 @@
+﻿﻿﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>管理系统</title>
+    <link href="css/default.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="adminjs/themes/default/easyui.css" />
+    <link rel="stylesheet" type="text/css" href="adminjs/themes/icon.css" />
+    <script type="text/javascript" src="adminjs/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="adminjs/jquery.leoweather.min.js"></script>
+    <script type="text/javascript" src="adminjs/jquery.easyui.1.2.6.min.js"></script>
+	<script type="text/javascript" src='adminjs/index.js'> </script>
+	<style type="text/css">
+		*{margin:0;padding: 0;}
+		.pic{
+			width: 120px;
+			height: 180px;
+			margin: 150px auto 0;
+			position: relative;
+			/*transform 旋转元素*/
+			transform-style:preserve-3d;
+			transform:perspective(800px) rotateX(-10deg) rotateY(0deg);
+		}
+		body{background-color: #66677c;overflow:hidden;}
+		
+		.pic img{
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			border-radius: 5px;
+			box-shadow: 0px 0px 10px #fff;
+			/*倒影的设置*/
+			-webkit-box-reflect:below 10px -webkit-linear-gradient(top,rgba(0,0,0,0) 50%,rgba(0,0,0,.5) 100%);
+		}
+		.pic p{
+			width: 1200px;
+			height: 1200px;
+			background: -webkit-radial-gradient(center center,600px 600px,rgba(255,255,255,.5),rgba(0,0,0,0));
+			position: absolute;
+			top:100%;left:50%;
+			margin-top: -600px;
+			margin-left: -600px;
+			border-radius:600px;
+			transform:rotateX(90deg);
+		}
+	</style>
+	
+	<script type="text/javascript">
+		$(function(){
+	
+		var imgL=$(".pic img").size();
+		var deg=360/imgL;
+		var roY=0,roX=-10;
+		 var xN=0,yN=0;
+		 var play=null;
+		
+		$(".pic img").each(function(i){
+			$(this).css({
+				<!--translateZ 定义2d旋转沿着z轴-->
+				"transform":"rotateY("+i*deg+"deg) translateZ(300px)"	});
+				<!--防止图片被拖拽-->
+				$(this).attr('ondragstart','return false');
+			});
+		
+			$(document).mousedown(function(ev){
+			var x_=ev.clientX;
+			var y_=ev.clientY;
+			clearInterval(play);
+				console.log('我按下了');
+				$(this).bind('mousemove',function(ev){
+					/*获取当前鼠标的坐标*/
+					var x=ev.clientX;
+					var y=ev.clientY;
+					/*两次坐标之间的距离*/
+					  xN=x-x_;
+					  yN=y-y_;
+		
+					 roY+=xN*0.2;
+					roX-=yN*0.1;
+					console.log('移动');
+					//$('body').append('<div style="width:5px;height:5px;position:absolute;top:'+y+'px;left:'+x+'px;background-color:red"></div>');
+		
+					$('.pic').css({
+						 transform:'perspective(800px) rotateX('+roX+'deg) rotateY('+roY+'deg)'
+					});
+					/*之前的鼠标坐标*/
+				 x_=ev.clientX;
+				 y_=ev.clientY;
+		
+				});
+			}).mouseup(function(){
+				  $(this).unbind('mousemove');
+				  var play=setInterval(function(){
+				   
+				   xN*=0.95;
+				   yN*=0.95
+				   if(Math.abs(xN)<1 && Math.abs(yN)<1){
+					  clearInterval(play);
+				   }
+					roY+=xN*0.2;
+					roX-=yN*0.1;
+					$('.pic').css({
+						 transform:'perspective(800px) rotateX('+roX+'deg) rotateY('+roY+'deg)'
+					});
+		
+				  },30);
+		
+			});
+		
+		});
+	</script>
+</head>
+<body  class="easyui-layout" style="overflow-y: hidden"  fit="true"   scroll="no">
+<noscript>
+<div style=" position:absolute; z-index:100000; height:2046px;top:0px;left:0px; width:100%; background:white; text-align:center;">
+    <img src="images/noscript.gif" alt='抱歉，请开启脚本支持！' />
+</div></noscript>
+
+<div id="loading-mask" style="position:absolute;top:0px; left:0px; width:100%; height:100%; background:#D2E0F2; z-index:20000">
+<div id="pageloading" style="position:absolute; top:50%; left:50%; margin:-120px 0px 0px -120px; text-align:center;  border:2px solid #8DB2E3; width:200px; height:40px;  font-size:14px;padding:10px; font-weight:bold; background:#fff; color:#15428B;"> 
+    <img src="images/loading.gif" align="absmiddle" /> 正在加载中,请稍候...</div>
+</div>
+
+    <div region="north" split="true" border="false" style="overflow: hidden; height: 30px;
+        background: url(images/layout-browser-hd-bg.gif) #7f99be repeat-x center 50%;
+        line-height: 20px;color: #fff; font-family: Verdana, 微软雅黑,黑体">
+    
+        
+          
+       <span style="float:right; padding-right:20px;" class="head">
+       
+  <span id="weather"> 
+  	
+  	 <script>$('#weather').leoweather({format:'{城市}&nbsp&nbsp&nbsp{气温}℃<span>&nbsp&nbsp&nbsp&nbsp</span>{天气}<span>&nbsp&nbsp&nbsp&nbsp</span>{风向}{风级}级&nbsp&nbsp'});</script> 
+  </span> 
+  &nbsp&nbsp
+   当前时间：<font color="#33FFFF"><span id="nowDateTimeSpan" ></span></font>
+  &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp  
+        欢迎 <span id="username"></span> <a href="#" id="editpass">修改密码</a> <a href="javascript:void(0)" id="loginOut">安全退出</a></span>
+        <span style="padding-left:10px; font-size: 16px; "><img src="images/blocks.gif" width="20" height="20" align="absmiddle" /> 管理系统</span>
+    </div>
+    <div region="south" split="true" style="height: 30px; background: #D2E0F2; ">
+        <div class="footer"></div>
+        <!-- 上次登录时间 -->
+        <span id="time"  style="float:right;padding-right:20px; color: red;" ></span>
+    </div>
+    <div region="west" split="true"  title="导航菜单" style="width:200px;" id="west">
+	   	    <div id="aa" class="easyui-accordion" style="width:200px;">   
+			    <div title="功能搜索"
+					data-options="iconCls:'icon-search',collapsed:false,collapsible:false"
+					style="padding:10px;">
+					<input id="HomeFuncSearch" class="easyui-searchbox" 
+						data-options={prompt:'请输入想要搜索的功能'}
+						searcher="doSearch" 
+						style="width:160px;">
+				</div> 
+			</div>  
+			<div id="nav">
+		<!--  导航内容 -->
+				
+			</div>
+
+    </div>
+    <div id="mainPanle" region="center" style="background: #eee; overflow-y:hidden">
+        <div id="tabs" class="easyui-tabs"  fit="true" border="false" >
+			<div title="欢迎使用" style="padding:20px;overflow:hidden; color:red; background-image: url(img/timg.png) ;background-size:100% 100%; ">
+				<div class="pic">
+					<img 
+					class="imgs" ref="601" rel="report_order.html?oper=orders" icon="icon icon-sys" nav="销售统计表" src="img/1.PNG"/>
+					<img 
+					class="imgs" ref="602" rel="report_trend.html?oper=orders" icon="icon icon-sys" nav="销售趋势分析"src="img/2.PNG"/>
+					<img 
+					class="imgs" ref="603" rel="report_returnOrders.html" icon="icon icon-sys" nav="销售退货统计表"src="img/3.PNG"/>
+					<img 
+					class="imgs" ref="604" rel="report_returnTrend.html" icon="icon icon-sys" nav="销售退货趋势分析"src="img/4.png"/>
+					<img 
+					class="imgs" ref="605" rel="report_inoutmoney.html" icon="icon icon-sys" nav="收入支出统计分析"src="img/5.PNG"/>
+					<img src="img/6.PNG"/>
+					<img src="img/7.PNG"/>
+					<img src="img/8.PNG"/>
+					<img src="img/9.PNG"/>
+					<img src="img/10.PNG"/>
+					<p></p>
+				</div>
+			</div>
+		</div>
+    </div>
+    
+    
+    <!--修改密码窗口-->
+	<div id="w" class="easyui-dialog">
+	    <div class="easyui-layout" fit="true">
+	        <div region="center" border="false" style="padding: 10px; background: #fff;">
+	            <table cellpadding=3>
+	                <tr>
+	                    <td>旧密码：</td>
+	                    <td><input id="txtOldPass" type="password" class="txt01" /></td>
+	                </tr>
+	                <tr>
+	                    <td>新密码：</td>
+	                    <td><input id="txtNewPass" type="password" class="txt01" /></td>
+	                </tr>
+	                <tr>
+	                    <td>确认密码：</td>
+	                    <td><input id="txtRePass" type="password" class="txt01" /></td>
+	                </tr>
+	            </table>
+	        </div>
+	    </div>
+	</div>
+
+	<div id="mm" class="easyui-menu" style="width:150px;">
+		<div id="tabupdate">刷新</div>
+		<div class="menu-sep"></div>
+		<div id="close">关闭</div>
+		<div id="closeall">全部关闭</div>
+		<div id="closeother">除此之外全部关闭</div>
+		<div class="menu-sep"></div>
+		<div id="closeright">当前页右侧全部关闭</div>
+		<div id="closeleft">当前页左侧全部关闭</div>
+		<div class="menu-sep"></div>
+		<div id="exit">退出</div>
+	</div>
+
+
+</body>
+</html>
